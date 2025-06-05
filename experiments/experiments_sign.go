@@ -139,5 +139,3 @@ func MeasureSignTimeByMessageVectorLength() {
 		}
 	}
 }
-
-

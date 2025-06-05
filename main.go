@@ -5,14 +5,10 @@ import (
 	"github.com/aniagut/msc-bbs-plus-plus/keygen"
 	"github.com/aniagut/msc-bbs-plus-plus/sign"
 	"github.com/aniagut/msc-bbs-plus-plus/verify"
-	// "github.com/aniagut/msc-bbs-plus-plus/experiments"
 )
 
 
 func main() {
-	// Measure the time taken for KeyGen function
-	// experiments.MeasureVerifyTimeByMessageVectorLength()
-	
 	// Example usage of KeyGen
 	l := 5 // Length of the messages vector
 	result, err := keygen.KeyGen(l)
@@ -37,7 +33,7 @@ func main() {
 	fmt.Println("Signature generated successfully.")
 
 	// Example usage of Verify
-	M1 := []string{"message1", "message99", "message3", "message4", "message5"}
+	M1 := []string{"message1", "message2", "message3", "message4", "message5"}
 	isValid, err := verify.Verify(result.PublicParameters, result.VerificationKey, M1, signature)
 	if err != nil {
 		fmt.Println("Error verifying signature:", err)

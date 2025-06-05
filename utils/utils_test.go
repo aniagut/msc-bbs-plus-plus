@@ -5,7 +5,7 @@ import (
 
     e "github.com/cloudflare/circl/ecc/bls12381"
     "github.com/stretchr/testify/assert"
-	"math/big"
+    "math/big"
 )
 
 // TestComputeCommitment tests the ComputeCommitment function.
@@ -39,8 +39,8 @@ func TestRandomScalar(t *testing.T) {
 
     // Assert the scalar is less than the curve order
     order := OrderAsBigInt()
-	scalarBytes, err := scalar.MarshalBinary()
-	assert.NoError(t, err, "Scalar.MarshalBinary should not return an error")
+    scalarBytes, err := scalar.MarshalBinary()
+    assert.NoError(t, err, "Scalar.MarshalBinary should not return an error")
 
     scalarBigInt := new(big.Int).SetBytes(scalarBytes)
     assert.True(t, scalarBigInt.Cmp(order) < 0, "RandomScalar should be less than the curve order")

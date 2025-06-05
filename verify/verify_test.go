@@ -15,12 +15,12 @@ func TestVerifyValidSignature(t *testing.T) {
     publicParams := models.PublicParameters{
         G1: e.G1Generator(),
         G2: e.G2Generator(),
-        H1: generateMockH1(3), // Generate 3 mock h1 generators
+        H1: GenerateMockH1(3), // Generate 3 mock h1 generators
     }
 
     // Mock signing key
     signingKey := models.SigningKey{
-        X: generateMockScalar(12345),
+        X: GenerateMockScalar(12345),
     }
 
     // Mock verification key
@@ -33,7 +33,7 @@ func TestVerifyValidSignature(t *testing.T) {
     messages := []string{"message1", "message2", "message3"}
 
     // Generate a valid signature
-    signature, err := generateValidSignature(publicParams, signingKey, messages)
+    signature, err := GenerateValidSignature(publicParams, signingKey, messages)
     assert.NoError(t, err, "Signature generation should not return an error")
 
     // Call the Verify function
@@ -52,7 +52,7 @@ func TestVerifyInvalidSignature(t *testing.T) {
     publicParams := models.PublicParameters{
         G1: e.G1Generator(),
         G2: e.G2Generator(),
-        H1: generateMockH1(3), // Generate 3 mock h1 generators
+        H1: GenerateMockH1(3), // Generate 3 mock h1 generators
     }
 
     // Mock verification key
@@ -66,7 +66,7 @@ func TestVerifyInvalidSignature(t *testing.T) {
     // Mock an invalid signature
     signature := models.Signature{
         A: e.G1Generator(),
-        E: generateMockScalar(99999),
+        E: GenerateMockScalar(99999),
     }
 
     // Call the Verify function
@@ -79,10 +79,10 @@ func TestVerifyInvalidSignature(t *testing.T) {
     assert.False(t, isValid, "Verify should return false for an invalid signature")
 }
 
-// Helper function to generate a valid signature
-func generateValidSignature(publicParams models.PublicParameters, signingKey models.SigningKey, messages []string) (models.Signature, error) {
-    // Compute commitment C
-    C, err := utils.ComputeCommitment(messages, publicParams.H1, publicParams.G1)
+// GenerateValidSignature generates a valid signature for testing.
+func GenerateValidSignature(publicParams models.PublicParameters, signingKey models.SigningKey, messages []string) (models.Signature, error) {
+    // Compute commitment c
+    c, err := utils.ComputeCommitment(messages, publicParams.H1, publicParams.G1)
     if err != nil {
         return models.Signature{}, err
     }
@@ -93,23 +93,23 @@ func generateValidSignature(publicParams models.PublicParameters, signingKey mod
         return models.Signature{}, err
     }
 
-    // Compute A = C^{1 / (x + e)}
-    x_plus_e := new(e.Scalar)
-    x_plus_e.Add(signingKey.X, &eScalar)
-    x_plus_e.Inv(x_plus_e)
+    // Compute a = c^{1 / (x + e)}
+    xPlusE := new(e.Scalar)
+    xPlusE.Add(signingKey.X, &eScalar)
+    xPlusE.Inv(xPlusE)
 
-    A := new(e.G1)
-    A.ScalarMult(x_plus_e, C)
+    a := new(e.G1)
+    a.ScalarMult(xPlusE, c)
 
     // Return the signature
     return models.Signature{
-        A: A,
+        A: a,
         E: &eScalar,
     }, nil
 }
 
-// Helper function to generate mock h1 generators
-func generateMockH1(length int) []e.G1 {
+// GenerateMockH1 generates a slice of mock G1 elements for testing purposes.
+func GenerateMockH1(length int) []e.G1 {
     h1 := make([]e.G1, length)
     for i := 0; i < length; i++ {
         h1[i] = *e.G1Generator()
@@ -117,8 +117,8 @@ func generateMockH1(length int) []e.G1 {
     return h1
 }
 
-// Helper function to generate a mock scalar
-func generateMockScalar(value uint64) *e.Scalar {
+// GenerateMockScalar generates a mock scalar for testing purposes.
+func GenerateMockScalar(value uint64) *e.Scalar {
     scalar := new(e.Scalar)
     scalar.SetUint64(value)
     return scalar
